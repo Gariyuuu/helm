@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,7 +27,6 @@ export function FocusModePanel({
   const [elapsed, setElapsed] = useState(0);
   const [workItemId, setWorkItemId] = useState("none");
   const [plannedMinutes, setPlannedMinutes] = useState("25");
-  const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -62,6 +62,7 @@ export function FocusModePanel({
               onClick={() =>
                 startTransition(async () => {
                   await abandonFocusSession(activeSession.id);
+                  toast("Focus session abandoned");
                   router.refresh();
                 })
               }
@@ -75,6 +76,7 @@ export function FocusModePanel({
               onClick={() =>
                 startTransition(async () => {
                   await stopFocusSession(activeSession.id);
+                  toast.success(`Focus session logged — ${formatElapsed(elapsed)}`);
                   router.refresh();
                 })
               }
@@ -119,12 +121,12 @@ export function FocusModePanel({
           disabled={isPending || !plannedMinutes}
           onClick={() =>
             startTransition(async () => {
-              setError(null);
               try {
                 await startFocusSession({ workItemId: workItemId === "none" ? null : workItemId, plannedMinutes: Number(plannedMinutes) });
+                toast.success("Focus session started");
                 router.refresh();
               } catch (e) {
-                setError(e instanceof Error ? e.message : "Could not start session");
+                toast.error(e instanceof Error ? e.message : "Could not start session");
               }
             })
           }
@@ -132,7 +134,6 @@ export function FocusModePanel({
           <Play className="size-3.5" /> Start
         </Button>
       </div>
-      {error && <p className="mt-2 text-sm text-priority-critical">{error}</p>}
     </Card>
   );
 }

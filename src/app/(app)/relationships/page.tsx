@@ -6,9 +6,10 @@ import { getWorkItemsByDomain } from "@/lib/queries/work-items";
 import { ContactFormDialog } from "@/components/career/contact-form-dialog";
 import { WorkItemFormDialog } from "@/components/work-items/work-item-form-dialog";
 import { WorkItemRow } from "@/components/work-items/work-item-row";
+import { PageHeader } from "@/components/layout/page-header";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, Users } from "lucide-react";
 
 export default async function RelationshipsPage() {
   const user = await requireUser();
@@ -24,10 +25,12 @@ export default async function RelationshipsPage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-6 p-4 md:p-6">
-      <div>
-        <h1 className="text-xl font-semibold tracking-tight">Relationships</h1>
-        <p className="text-sm text-muted-foreground">People, and things to follow up on with them.</p>
-      </div>
+      <PageHeader
+        icon={Users}
+        title="Relationships"
+        description="People, and things to follow up on with them."
+        domainSlug="relationships"
+      />
 
       <div>
         <div className="mb-2 flex items-center justify-between">

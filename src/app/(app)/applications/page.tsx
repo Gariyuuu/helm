@@ -2,9 +2,10 @@ import { requireUser } from "@/lib/auth/current-user";
 import { getApplicationsForUser, getCompaniesForUser } from "@/lib/queries/career";
 import { ApplicationFormDialog } from "@/components/applications/application-form-dialog";
 import { ApplicationCard } from "@/components/applications/application-card";
-import { Card } from "@/components/ui/card";
+import { PageHeader } from "@/components/layout/page-header";
+import { EmptyState } from "@/components/layout/empty-state";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { FileText, Plus } from "lucide-react";
 
 const ACTIVE_GROUPS: { label: string; statuses: string[] }[] = [
   { label: "Interested / researching", statuses: ["interested", "researching"] },
@@ -27,25 +28,25 @@ export default async function ApplicationsPage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-4 p-4 md:p-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-semibold tracking-tight">Application Tracker</h1>
-          <p className="text-sm text-muted-foreground">
-            {total} total · {responseRate}% response rate
-          </p>
-        </div>
-        <ApplicationFormDialog
-          companies={companyOptions}
-          trigger={
-            <Button size="sm" className="gap-1.5">
-              <Plus className="size-4" /> New
-            </Button>
-          }
-        />
-      </div>
+      <PageHeader
+        icon={FileText}
+        title="Application Tracker"
+        description={`${total} total · ${responseRate}% response rate`}
+        domainSlug="career"
+        action={
+          <ApplicationFormDialog
+            companies={companyOptions}
+            trigger={
+              <Button size="sm" className="gap-1.5">
+                <Plus className="size-4" /> New
+              </Button>
+            }
+          />
+        }
+      />
 
       {total === 0 ? (
-        <Card className="border-dashed p-10 text-center text-sm text-muted-foreground">No applications yet.</Card>
+        <EmptyState icon={FileText}>No applications yet.</EmptyState>
       ) : (
         <div className="flex flex-col gap-5">
           {ACTIVE_GROUPS.map((group) => {

@@ -3,9 +3,10 @@ import { getGoalsForUser } from "@/lib/queries/goals";
 import { getDomainsForUser } from "@/lib/queries/domains";
 import { GoalFormDialog } from "@/components/goals/goal-form-dialog";
 import { GoalCard } from "@/components/goals/goal-card";
-import { Card } from "@/components/ui/card";
+import { PageHeader } from "@/components/layout/page-header";
+import { EmptyState } from "@/components/layout/empty-state";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, Target } from "lucide-react";
 
 export default async function GoalsPage() {
   const user = await requireUser();
@@ -17,26 +18,25 @@ export default async function GoalsPage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-4 p-4 md:p-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-semibold tracking-tight">Goals</h1>
-          <p className="text-sm text-muted-foreground">Vision → Goal → Milestone → Project → Task.</p>
-        </div>
-        <GoalFormDialog
-          trigger={
-            <Button size="sm" className="gap-1.5">
-              <Plus className="size-4" /> New goal
-            </Button>
-          }
-          domains={domainOptions}
-          goals={goalOptions}
-        />
-      </div>
+      <PageHeader
+        icon={Target}
+        title="Goals"
+        description="Vision → Goal → Milestone → Project → Task."
+        action={
+          <GoalFormDialog
+            trigger={
+              <Button size="sm" className="gap-1.5">
+                <Plus className="size-4" /> New goal
+              </Button>
+            }
+            domains={domainOptions}
+            goals={goalOptions}
+          />
+        }
+      />
 
       {topLevel.length === 0 ? (
-        <Card className="border-dashed p-10 text-center text-sm text-muted-foreground">
-          No goals yet. Start with what actually matters, then connect projects and tasks to it.
-        </Card>
+        <EmptyState icon={Target}>No goals yet. Start with what actually matters, then connect projects and tasks to it.</EmptyState>
       ) : (
         <div className="flex flex-col gap-3">
           {topLevel.map((goal) => {

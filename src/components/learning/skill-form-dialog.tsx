@@ -2,6 +2,7 @@
 
 import { useState, useTransition, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -28,18 +29,23 @@ export function SkillFormDialog({ trigger }: { trigger: ReactNode }) {
   function handleSubmit() {
     if (!name.trim()) return;
     startTransition(async () => {
-      await createSkill({
-        name: name.trim(),
-        currentLevel: Number(currentLevel),
-        targetLevel: Number(targetLevel),
-        nextLesson: nextLesson || undefined,
-      });
-      setName("");
-      setCurrentLevel("1");
-      setTargetLevel("5");
-      setNextLesson("");
-      setOpen(false);
-      router.refresh();
+      try {
+        await createSkill({
+          name: name.trim(),
+          currentLevel: Number(currentLevel),
+          targetLevel: Number(targetLevel),
+          nextLesson: nextLesson || undefined,
+        });
+        toast.success("Skill added");
+        setName("");
+        setCurrentLevel("1");
+        setTargetLevel("5");
+        setNextLesson("");
+        setOpen(false);
+        router.refresh();
+      } catch (e) {
+        toast.error(e instanceof Error ? e.message : "Could not add skill");
+      }
     });
   }
 

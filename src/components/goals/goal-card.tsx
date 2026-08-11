@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -81,6 +82,7 @@ export function GoalCard({
             onClick={() =>
               startTransition(async () => {
                 await completeGoal(goal.id);
+                toast.success("Goal completed");
                 router.refresh();
               })
             }
@@ -95,6 +97,7 @@ export function GoalCard({
             onClick={() =>
               startTransition(async () => {
                 await abandonGoal(goal.id);
+                toast("Goal abandoned");
                 router.refresh();
               })
             }

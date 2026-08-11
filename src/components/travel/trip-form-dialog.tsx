@@ -2,6 +2,7 @@
 
 import { useState, useTransition, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -28,18 +29,23 @@ export function TripFormDialog({ trigger }: { trigger: ReactNode }) {
   function handleSubmit() {
     if (!destination.trim()) return;
     startTransition(async () => {
-      await createTrip({
-        destination: destination.trim(),
-        startDate: startDate ? new Date(startDate) : null,
-        endDate: endDate ? new Date(endDate) : null,
-        budget: budget ? Number(budget) : undefined,
-      });
-      setDestination("");
-      setStartDate("");
-      setEndDate("");
-      setBudget("");
-      setOpen(false);
-      router.refresh();
+      try {
+        await createTrip({
+          destination: destination.trim(),
+          startDate: startDate ? new Date(startDate) : null,
+          endDate: endDate ? new Date(endDate) : null,
+          budget: budget ? Number(budget) : undefined,
+        });
+        toast.success("Trip created");
+        setDestination("");
+        setStartDate("");
+        setEndDate("");
+        setBudget("");
+        setOpen(false);
+        router.refresh();
+      } catch (e) {
+        toast.error(e instanceof Error ? e.message : "Could not create trip");
+      }
     });
   }
 

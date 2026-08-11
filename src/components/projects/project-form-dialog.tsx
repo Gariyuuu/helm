@@ -2,6 +2,7 @@
 
 import { useState, useTransition, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -59,13 +60,19 @@ export function ProjectFormDialog({
       nextActionText: nextActionText || undefined,
     };
     startTransition(async () => {
-      if (isEdit && projectId) {
-        await updateProject({ id: projectId, ...payload });
-      } else {
-        await createProject(payload);
+      try {
+        if (isEdit && projectId) {
+          await updateProject({ id: projectId, ...payload });
+          toast.success("Project updated");
+        } else {
+          await createProject(payload);
+          toast.success("Project created");
+        }
+        setOpen(false);
+        router.refresh();
+      } catch (e) {
+        toast.error(e instanceof Error ? e.message : "Could not save project");
       }
-      setOpen(false);
-      router.refresh();
     });
   }
 

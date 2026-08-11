@@ -2,6 +2,7 @@
 
 import { useState, useTransition, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -176,14 +177,20 @@ export function WorkItemFormDialog({
     };
 
     startTransition(async () => {
-      if (isEdit && workItemId) {
-        await updateWorkItem({ id: workItemId, ...payload });
-      } else {
-        await createWorkItem(payload);
+      try {
+        if (isEdit && workItemId) {
+          await updateWorkItem({ id: workItemId, ...payload });
+          toast.success("Work item updated");
+        } else {
+          await createWorkItem(payload);
+          toast.success("Work item created");
+        }
+        setOpen(false);
+        if (!isEdit) setValue(emptyValue(initial));
+        router.refresh();
+      } catch (e) {
+        toast.error(e instanceof Error ? e.message : "Could not save work item");
       }
-      setOpen(false);
-      if (!isEdit) setValue(emptyValue(initial));
-      router.refresh();
     });
   }
 

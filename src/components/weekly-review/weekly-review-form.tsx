@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -41,6 +42,7 @@ export function WeeklyReviewForm({
         notes: notes || undefined,
       });
       setSaved(true);
+      toast.success("Weekly review saved");
       router.refresh();
     });
   }

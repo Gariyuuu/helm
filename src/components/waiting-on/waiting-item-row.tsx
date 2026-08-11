@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -46,6 +47,7 @@ export function WaitingItemRow({ item }: { item: typeof waitingItems.$inferSelec
               disabled={isPending}
               onClick={() => startTransition(async () => {
                 await followUpWaitingItem(item.id);
+                toast.success("Marked as followed up");
                 router.refresh();
               })}
             >
@@ -57,6 +59,7 @@ export function WaitingItemRow({ item }: { item: typeof waitingItems.$inferSelec
             disabled={isPending}
             onClick={() => startTransition(async () => {
               await resolveWaitingItem(item.id);
+              toast.success("Resolved");
               router.refresh();
             })}
           >

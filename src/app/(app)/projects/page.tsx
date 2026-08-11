@@ -3,11 +3,13 @@ import { requireUser } from "@/lib/auth/current-user";
 import { getProjectsForUser } from "@/lib/queries/projects";
 import { getDomainsForUser } from "@/lib/queries/domains";
 import { ProjectFormDialog } from "@/components/projects/project-form-dialog";
+import { PageHeader } from "@/components/layout/page-header";
+import { EmptyState } from "@/components/layout/empty-state";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { FolderKanban, Plus } from "lucide-react";
 
 const HEALTH_CLASS: Record<string, string> = {
   healthy: "bg-health-healthy text-white border-0",
@@ -24,22 +26,24 @@ export default async function ProjectsPage() {
 
   return (
     <div className="mx-auto max-w-5xl space-y-4 p-4 md:p-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold tracking-tight">Projects</h1>
-        <ProjectFormDialog
-          trigger={
-            <Button size="sm" className="gap-1.5">
-              <Plus className="size-4" /> New project
-            </Button>
-          }
-          domains={domainOptions}
-        />
-      </div>
+      <PageHeader
+        icon={FolderKanban}
+        title="Projects"
+        domainSlug="projects"
+        action={
+          <ProjectFormDialog
+            trigger={
+              <Button size="sm" className="gap-1.5">
+                <Plus className="size-4" /> New project
+              </Button>
+            }
+            domains={domainOptions}
+          />
+        }
+      />
 
       {projects.length === 0 ? (
-        <Card className="border-dashed p-10 text-center text-sm text-muted-foreground">
-          No projects yet. Create one to group related work items together.
-        </Card>
+        <EmptyState icon={FolderKanban}>No projects yet. Create one to group related work items together.</EmptyState>
       ) : (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {projects.map((p) => (

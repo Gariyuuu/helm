@@ -2,6 +2,7 @@
 
 import { useState, useTransition, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -27,16 +28,21 @@ export function SemesterFormDialog({ trigger }: { trigger: ReactNode }) {
   function handleSubmit() {
     if (!name.trim()) return;
     startTransition(async () => {
-      await createSemester({
-        name: name.trim(),
-        startDate: startDate ? new Date(startDate) : null,
-        endDate: endDate ? new Date(endDate) : null,
-      });
-      setName("");
-      setStartDate("");
-      setEndDate("");
-      setOpen(false);
-      router.refresh();
+      try {
+        await createSemester({
+          name: name.trim(),
+          startDate: startDate ? new Date(startDate) : null,
+          endDate: endDate ? new Date(endDate) : null,
+        });
+        toast.success("Semester created");
+        setName("");
+        setStartDate("");
+        setEndDate("");
+        setOpen(false);
+        router.refresh();
+      } catch (e) {
+        toast.error(e instanceof Error ? e.message : "Could not create semester");
+      }
     });
   }
 

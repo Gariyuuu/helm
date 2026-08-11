@@ -1,7 +1,9 @@
 import { requireUser } from "@/lib/auth/current-user";
 import { computeWeekStats, currentWeekStart, getWeeklyReviewForWeek, getWeeklyReviewsForUser } from "@/lib/queries/weekly-review";
 import { WeeklyReviewForm } from "@/components/weekly-review/weekly-review-form";
+import { PageHeader } from "@/components/layout/page-header";
 import { Card } from "@/components/ui/card";
+import { ClipboardCheck } from "lucide-react";
 
 export default async function WeeklyReviewPage() {
   const user = await requireUser();
@@ -15,10 +17,7 @@ export default async function WeeklyReviewPage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-4 p-4 md:p-6">
-      <div>
-        <h1 className="text-xl font-semibold tracking-tight">Weekly Review</h1>
-        <p className="text-sm text-muted-foreground">Week of {weekStart.toLocaleDateString()}</p>
-      </div>
+      <PageHeader icon={ClipboardCheck} title="Weekly Review" description={`Week of ${weekStart.toLocaleDateString()}`} />
 
       <WeeklyReviewForm weekStart={weekStart} stats={stats} existing={existing} />
 

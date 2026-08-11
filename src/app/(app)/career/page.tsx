@@ -2,9 +2,10 @@ import { requireUser } from "@/lib/auth/current-user";
 import { getCompaniesForUser, getContactsForUser } from "@/lib/queries/career";
 import { CompanyFormDialog } from "@/components/career/company-form-dialog";
 import { ContactFormDialog } from "@/components/career/contact-form-dialog";
+import { PageHeader } from "@/components/layout/page-header";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Briefcase, Plus } from "lucide-react";
 
 export default async function CareerPage() {
   const user = await requireUser();
@@ -12,10 +13,12 @@ export default async function CareerPage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-6 p-4 md:p-6">
-      <div>
-        <h1 className="text-xl font-semibold tracking-tight">Career Command Center</h1>
-        <p className="text-sm text-muted-foreground">Companies, recruiters, and referrals in one place.</p>
-      </div>
+      <PageHeader
+        icon={Briefcase}
+        title="Career Command Center"
+        description="Companies, recruiters, and referrals in one place."
+        domainSlug="career"
+      />
 
       <div>
         <div className="mb-2 flex items-center justify-between">

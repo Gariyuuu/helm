@@ -2,6 +2,7 @@
 
 import { useState, useTransition, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -44,6 +45,7 @@ export function EventFormDialog({ trigger }: { trigger: ReactNode }) {
           allDay,
           location: location || undefined,
         });
+        toast.success("Event created");
         setTitle("");
         setStartAt("");
         setEndAt("");

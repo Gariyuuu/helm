@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { archiveProject } from "@/lib/actions/projects";
 import { Archive } from "lucide-react";
@@ -19,6 +20,7 @@ export function ArchiveProjectButton({ projectId }: { projectId: string }) {
       onClick={() =>
         startTransition(async () => {
           await archiveProject(projectId);
+          toast.success("Project archived");
           router.push("/projects");
         })
       }

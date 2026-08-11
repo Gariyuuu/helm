@@ -2,7 +2,9 @@ import { requireUser } from "@/lib/auth/current-user";
 import { getArchivedProjectsForUser } from "@/lib/queries/projects";
 import { getArchivedWorkItems } from "@/lib/queries/work-items";
 import { ArchivedProjectRow, ArchivedWorkItemRow } from "@/components/archive/archived-row";
+import { PageHeader } from "@/components/layout/page-header";
 import { Card } from "@/components/ui/card";
+import { Archive } from "lucide-react";
 
 export default async function ArchivePage() {
   const user = await requireUser();
@@ -10,10 +12,11 @@ export default async function ArchivePage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-6 p-4 md:p-6">
-      <div>
-        <h1 className="text-xl font-semibold tracking-tight">Archive</h1>
-        <p className="text-sm text-muted-foreground">Archived projects and work items. Restore anything that shouldn&apos;t be here.</p>
-      </div>
+      <PageHeader
+        icon={Archive}
+        title="Archive"
+        description="Archived projects and work items. Restore anything that shouldn't be here."
+      />
 
       <div>
         <h2 className="mb-2 text-sm font-semibold text-muted-foreground">Projects ({projects.length})</h2>

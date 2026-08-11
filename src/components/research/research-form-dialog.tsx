@@ -2,6 +2,7 @@
 
 import { useState, useTransition, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -64,13 +65,19 @@ export function ResearchFormDialog({
       notes: notes || undefined,
     };
     startTransition(async () => {
-      if (isEdit && researchId) {
-        await updateResearchProject({ id: researchId, ...payload });
-      } else {
-        await createResearchProject(payload);
+      try {
+        if (isEdit && researchId) {
+          await updateResearchProject({ id: researchId, ...payload });
+          toast.success("Research project updated");
+        } else {
+          await createResearchProject(payload);
+          toast.success("Research project created");
+        }
+        setOpen(false);
+        router.refresh();
+      } catch (e) {
+        toast.error(e instanceof Error ? e.message : "Could not save research project");
       }
-      setOpen(false);
-      router.refresh();
     });
   }
 

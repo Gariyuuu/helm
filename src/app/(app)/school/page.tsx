@@ -3,10 +3,11 @@ import { getSchoolDataForUser } from "@/lib/queries/school";
 import { SemesterFormDialog } from "@/components/school/semester-form-dialog";
 import { CourseFormDialog } from "@/components/school/course-form-dialog";
 import { CourseCard } from "@/components/school/course-card";
-import { Card } from "@/components/ui/card";
+import { PageHeader } from "@/components/layout/page-header";
+import { EmptyState } from "@/components/layout/empty-state";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { GraduationCap, Plus } from "lucide-react";
 
 export default async function SchoolPage() {
   const user = await requireUser();
@@ -16,44 +17,41 @@ export default async function SchoolPage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-4 p-4 md:p-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-semibold tracking-tight">School</h1>
-          <div className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
-            {activeSemester ? (
-              <Badge variant="outline">{activeSemester.name}</Badge>
-            ) : (
-              <span>No active semester</span>
-            )}
+      <PageHeader
+        icon={GraduationCap}
+        title="School"
+        domainSlug="academics"
+        description={activeSemester ? undefined : "No active semester"}
+        action={
+          <div className="flex gap-1.5">
+            <SemesterFormDialog
+              trigger={
+                <Button size="sm" variant="outline" className="gap-1.5">
+                  <Plus className="size-4" /> Semester
+                </Button>
+              }
+            />
+            <CourseFormDialog
+              semesterId={activeSemester?.id ?? null}
+              trigger={
+                <Button size="sm" className="gap-1.5" disabled={!activeSemester}>
+                  <Plus className="size-4" /> Course
+                </Button>
+              }
+            />
           </div>
-        </div>
-        <div className="flex gap-1.5">
-          <SemesterFormDialog
-            trigger={
-              <Button size="sm" variant="outline" className="gap-1.5">
-                <Plus className="size-4" /> Semester
-              </Button>
-            }
-          />
-          <CourseFormDialog
-            semesterId={activeSemester?.id ?? null}
-            trigger={
-              <Button size="sm" className="gap-1.5" disabled={!activeSemester}>
-                <Plus className="size-4" /> Course
-              </Button>
-            }
-          />
-        </div>
-      </div>
+        }
+      />
+      {activeSemester && (
+        <Badge variant="outline" className="-mt-2">
+          {activeSemester.name}
+        </Badge>
+      )}
 
       {!activeSemester ? (
-        <Card className="border-dashed p-10 text-center text-sm text-muted-foreground">
-          Start a semester to add courses and assignments.
-        </Card>
+        <EmptyState icon={GraduationCap}>Start a semester to add courses and assignments.</EmptyState>
       ) : activeCourses.length === 0 ? (
-        <Card className="border-dashed p-10 text-center text-sm text-muted-foreground">
-          No courses yet in {activeSemester.name}.
-        </Card>
+        <EmptyState icon={GraduationCap}>No courses yet in {activeSemester.name}.</EmptyState>
       ) : (
         <div className="flex flex-col gap-3">
           {activeCourses.map(({ course, assignments, computedGrade }) => (

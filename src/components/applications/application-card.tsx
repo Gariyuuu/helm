@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { setApplicationStatus } from "@/lib/actions/career";
@@ -37,6 +38,7 @@ export function ApplicationCard({
         onValueChange={(v) =>
           startTransition(async () => {
             await setApplicationStatus(application.id, v);
+            toast.success(`Moved to ${v.replace("_", " ")}`);
             router.refresh();
           })
         }

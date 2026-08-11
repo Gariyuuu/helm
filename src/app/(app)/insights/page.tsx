@@ -1,6 +1,8 @@
 import { requireUser } from "@/lib/auth/current-user";
 import { getInsightsForUser } from "@/lib/queries/insights";
+import { PageHeader } from "@/components/layout/page-header";
 import { Card } from "@/components/ui/card";
+import { BarChart3 } from "lucide-react";
 
 const HEALTH_CLASS: Record<string, string> = {
   healthy: "bg-health-healthy",
@@ -42,10 +44,7 @@ export default async function InsightsPage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-4 p-4 md:p-6">
-      <div>
-        <h1 className="text-xl font-semibold tracking-tight">Insights</h1>
-        <p className="text-sm text-muted-foreground">How work is actually moving.</p>
-      </div>
+      <PageHeader icon={BarChart3} title="Insights" description="How work is actually moving." />
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <Card className="p-4 text-center">

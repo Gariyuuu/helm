@@ -2,6 +2,7 @@
 
 import { useState, useTransition, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -36,19 +37,24 @@ export function ApplicationFormDialog({
   function handleSubmit() {
     if (!role.trim()) return;
     startTransition(async () => {
-      await createApplication({
-        role: role.trim(),
-        companyId: companyId === "none" ? null : companyId,
-        type,
-        deadline: deadline ? new Date(deadline) : null,
-        link: link || undefined,
-      });
-      setRole("");
-      setCompanyId("none");
-      setDeadline("");
-      setLink("");
-      setOpen(false);
-      router.refresh();
+      try {
+        await createApplication({
+          role: role.trim(),
+          companyId: companyId === "none" ? null : companyId,
+          type,
+          deadline: deadline ? new Date(deadline) : null,
+          link: link || undefined,
+        });
+        toast.success("Application added");
+        setRole("");
+        setCompanyId("none");
+        setDeadline("");
+        setLink("");
+        setOpen(false);
+        router.refresh();
+      } catch (e) {
+        toast.error(e instanceof Error ? e.message : "Could not add application");
+      }
     });
   }
 

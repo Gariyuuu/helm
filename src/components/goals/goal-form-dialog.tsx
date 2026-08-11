@@ -2,6 +2,7 @@
 
 import { useState, useTransition, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -61,13 +62,19 @@ export function GoalFormDialog({
       targetDate: targetDate ? new Date(targetDate) : null,
     };
     startTransition(async () => {
-      if (isEdit && goalId) {
-        await updateGoal({ id: goalId, ...payload });
-      } else {
-        await createGoal(payload);
+      try {
+        if (isEdit && goalId) {
+          await updateGoal({ id: goalId, ...payload });
+          toast.success("Goal updated");
+        } else {
+          await createGoal(payload);
+          toast.success("Goal created");
+        }
+        setOpen(false);
+        router.refresh();
+      } catch (e) {
+        toast.error(e instanceof Error ? e.message : "Could not save goal");
       }
-      setOpen(false);
-      router.refresh();
     });
   }
 

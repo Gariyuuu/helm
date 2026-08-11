@@ -2,9 +2,10 @@ import { requireUser } from "@/lib/auth/current-user";
 import { getResearchProjectsForUser } from "@/lib/queries/research";
 import { ResearchFormDialog } from "@/components/research/research-form-dialog";
 import { ResearchCard } from "@/components/research/research-card";
-import { Card } from "@/components/ui/card";
+import { PageHeader } from "@/components/layout/page-header";
+import { EmptyState } from "@/components/layout/empty-state";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { FlaskConical, Plus } from "lucide-react";
 
 export default async function ResearchPage() {
   const user = await requireUser();
@@ -12,24 +13,24 @@ export default async function ResearchPage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-4 p-4 md:p-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-semibold tracking-tight">Research Tracker</h1>
-          <p className="text-sm text-muted-foreground">Groups, papers, and reading lists.</p>
-        </div>
-        <ResearchFormDialog
-          trigger={
-            <Button size="sm" className="gap-1.5">
-              <Plus className="size-4" /> New
-            </Button>
-          }
-        />
-      </div>
+      <PageHeader
+        icon={FlaskConical}
+        title="Research Tracker"
+        description="Groups, papers, and reading lists."
+        domainSlug="research"
+        action={
+          <ResearchFormDialog
+            trigger={
+              <Button size="sm" className="gap-1.5">
+                <Plus className="size-4" /> New
+              </Button>
+            }
+          />
+        }
+      />
 
       {projects.length === 0 ? (
-        <Card className="border-dashed p-10 text-center text-sm text-muted-foreground">
-          No research projects yet.
-        </Card>
+        <EmptyState icon={FlaskConical}>No research projects yet.</EmptyState>
       ) : (
         <div className="flex flex-col gap-3">
           {projects.map((p) => (

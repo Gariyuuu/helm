@@ -2,6 +2,7 @@
 
 import { useState, useTransition, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -27,12 +28,17 @@ export function CompanyFormDialog({ trigger }: { trigger: ReactNode }) {
   function handleSubmit() {
     if (!name.trim()) return;
     startTransition(async () => {
-      await createCompany({ name: name.trim(), website: website || undefined, industry: industry || undefined });
-      setName("");
-      setWebsite("");
-      setIndustry("");
-      setOpen(false);
-      router.refresh();
+      try {
+        await createCompany({ name: name.trim(), website: website || undefined, industry: industry || undefined });
+        toast.success("Company added");
+        setName("");
+        setWebsite("");
+        setIndustry("");
+        setOpen(false);
+        router.refresh();
+      } catch (e) {
+        toast.error(e instanceof Error ? e.message : "Could not add company");
+      }
     });
   }
 

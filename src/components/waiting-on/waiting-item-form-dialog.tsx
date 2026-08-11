@@ -2,6 +2,7 @@
 
 import { useState, useTransition, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -28,18 +29,23 @@ export function WaitingItemFormDialog({ trigger }: { trigger: ReactNode }) {
   function handleSubmit() {
     if (!person.trim() || !whatFor.trim()) return;
     startTransition(async () => {
-      await createWaitingItem({
-        person: person.trim(),
-        whatFor: whatFor.trim(),
-        expectedResponseDate: expectedResponseDate ? new Date(expectedResponseDate) : null,
-        followUpDate: followUpDate ? new Date(followUpDate) : null,
-      });
-      setPerson("");
-      setWhatFor("");
-      setExpectedResponseDate("");
-      setFollowUpDate("");
-      setOpen(false);
-      router.refresh();
+      try {
+        await createWaitingItem({
+          person: person.trim(),
+          whatFor: whatFor.trim(),
+          expectedResponseDate: expectedResponseDate ? new Date(expectedResponseDate) : null,
+          followUpDate: followUpDate ? new Date(followUpDate) : null,
+        });
+        toast.success("Added to Waiting On");
+        setPerson("");
+        setWhatFor("");
+        setExpectedResponseDate("");
+        setFollowUpDate("");
+        setOpen(false);
+        router.refresh();
+      } catch (e) {
+        toast.error(e instanceof Error ? e.message : "Could not create waiting item");
+      }
     });
   }
 

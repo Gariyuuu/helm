@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -35,6 +36,7 @@ export function WorkItemRow({ scored, projectName }: { scored: ScoredWorkItem; p
         onCheckedChange={() =>
           startTransition(async () => {
             await completeWorkItem(item.id);
+            toast.success(`"${item.title}" completed`);
             router.refresh();
           })
         }
@@ -70,6 +72,7 @@ export function WorkItemRow({ scored, projectName }: { scored: ScoredWorkItem; p
             onClick={() =>
               startTransition(async () => {
                 await postponeWorkItem(item.id);
+                toast("Postponed");
                 router.refresh();
               })
             }
@@ -80,6 +83,7 @@ export function WorkItemRow({ scored, projectName }: { scored: ScoredWorkItem; p
             onClick={() =>
               startTransition(async () => {
                 await archiveWorkItem(item.id);
+                toast.success(`"${item.title}" archived`);
                 router.refresh();
               })
             }

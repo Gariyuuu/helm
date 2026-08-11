@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { restoreProject } from "@/lib/actions/projects";
@@ -24,6 +25,7 @@ export function ArchivedProjectRow({ project }: { project: { id: string; name: s
         onClick={() =>
           startTransition(async () => {
             await restoreProject(project.id);
+            toast.success(`"${project.name}" restored`);
             router.refresh();
           })
         }
@@ -51,6 +53,7 @@ export function ArchivedWorkItemRow({ item }: { item: { id: string; title: strin
         onClick={() =>
           startTransition(async () => {
             await setWorkItemStatus(item.id, "planned");
+            toast.success(`"${item.title}" restored`);
             router.refresh();
           })
         }

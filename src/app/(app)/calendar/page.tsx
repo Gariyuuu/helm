@@ -4,9 +4,10 @@ import { getActiveWorkItems } from "@/lib/queries/work-items";
 import { EventFormDialog } from "@/components/calendar/event-form-dialog";
 import { EventRow } from "@/components/calendar/event-row";
 import { FocusModePanel } from "@/components/calendar/focus-mode-panel";
-import { Card } from "@/components/ui/card";
+import { PageHeader } from "@/components/layout/page-header";
+import { EmptyState } from "@/components/layout/empty-state";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Calendar, Plus } from "lucide-react";
 
 export default async function CalendarPage() {
   const user = await requireUser();
@@ -25,24 +26,25 @@ export default async function CalendarPage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-4 p-4 md:p-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-semibold tracking-tight">Calendar</h1>
-          <p className="text-sm text-muted-foreground">Upcoming events and focus time.</p>
-        </div>
-        <EventFormDialog
-          trigger={
-            <Button size="sm" className="gap-1.5">
-              <Plus className="size-4" /> New event
-            </Button>
-          }
-        />
-      </div>
+      <PageHeader
+        icon={Calendar}
+        title="Calendar"
+        description="Upcoming events and focus time."
+        action={
+          <EventFormDialog
+            trigger={
+              <Button size="sm" className="gap-1.5">
+                <Plus className="size-4" /> New event
+              </Button>
+            }
+          />
+        }
+      />
 
       <FocusModePanel activeSession={activeSession} workItemOptions={workItemOptions} />
 
       {byDay.size === 0 ? (
-        <Card className="border-dashed p-10 text-center text-sm text-muted-foreground">No upcoming events.</Card>
+        <EmptyState icon={Calendar}>No upcoming events.</EmptyState>
       ) : (
         <div className="flex flex-col gap-4">
           {[...byDay.entries()].map(([day, dayEvents]) => (

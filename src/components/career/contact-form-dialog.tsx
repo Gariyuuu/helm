@@ -2,6 +2,7 @@
 
 import { useState, useTransition, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -29,20 +30,25 @@ export function ContactFormDialog({ trigger }: { trigger: ReactNode }) {
   function handleSubmit() {
     if (!name.trim()) return;
     startTransition(async () => {
-      await createContact({
-        name: name.trim(),
-        company: company || undefined,
-        role: role || undefined,
-        relationshipType: relationshipType || undefined,
-        email: email || undefined,
-      });
-      setName("");
-      setCompany("");
-      setRole("");
-      setRelationshipType("");
-      setEmail("");
-      setOpen(false);
-      router.refresh();
+      try {
+        await createContact({
+          name: name.trim(),
+          company: company || undefined,
+          role: role || undefined,
+          relationshipType: relationshipType || undefined,
+          email: email || undefined,
+        });
+        toast.success("Contact added");
+        setName("");
+        setCompany("");
+        setRole("");
+        setRelationshipType("");
+        setEmail("");
+        setOpen(false);
+        router.refresh();
+      } catch (e) {
+        toast.error(e instanceof Error ? e.message : "Could not add contact");
+      }
     });
   }
 

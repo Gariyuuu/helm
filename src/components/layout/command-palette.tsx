@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { quickAddWorkItem } from "@/lib/actions/work-items";
 import { NAV_GROUPS } from "@/lib/nav";
@@ -30,6 +31,7 @@ export function CommandPalette() {
     if (!trimmed) return;
     startTransition(async () => {
       await quickAddWorkItem(trimmed);
+      toast.success(`"${trimmed}" added to Inbox`);
       setQuery("");
       setOpen(false);
       router.refresh();

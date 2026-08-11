@@ -2,6 +2,7 @@
 
 import { useState, useTransition, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -28,19 +29,24 @@ export function CourseFormDialog({ trigger, semesterId }: { trigger: ReactNode; 
   function handleSubmit() {
     if (!name.trim()) return;
     startTransition(async () => {
-      await createCourse({
-        semesterId,
-        name: name.trim(),
-        code: code || undefined,
-        professor: professor || undefined,
-        units: units ? Number(units) : undefined,
-      });
-      setName("");
-      setCode("");
-      setProfessor("");
-      setUnits("");
-      setOpen(false);
-      router.refresh();
+      try {
+        await createCourse({
+          semesterId,
+          name: name.trim(),
+          code: code || undefined,
+          professor: professor || undefined,
+          units: units ? Number(units) : undefined,
+        });
+        toast.success("Course created");
+        setName("");
+        setCode("");
+        setProfessor("");
+        setUnits("");
+        setOpen(false);
+        router.refresh();
+      } catch (e) {
+        toast.error(e instanceof Error ? e.message : "Could not create course");
+      }
     });
   }
 
