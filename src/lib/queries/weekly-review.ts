@@ -1,6 +1,6 @@
 import "server-only";
 import { and, eq } from "drizzle-orm";
-import { db } from "@/lib/db/client";
+import { db, safeQuery } from "@/lib/db/client";
 import { weeklyReviews, workItems } from "@/lib/db/schema";
 
 export function currentWeekStart(): Date {
@@ -12,28 +12,41 @@ export function currentWeekStart(): Date {
 }
 
 export async function computeWeekStats(userId: string, weekStart: Date) {
-  const weekEnd = new Date(weekStart.getTime() + 7 * 24 * 60 * 60 * 1000);
-  const rows = await db.select().from(workItems).where(eq(workItems.userId, userId));
+  return safeQuery(
+    async () => {
+      const weekEnd = new Date(weekStart.getTime() + 7 * 24 * 60 * 60 * 1000);
+      const rows = await db.select().from(workItems).where(eq(workItems.userId, userId));
 
-  const inWeek = (d: Date | null) => Boolean(d && d >= weekStart && d < weekEnd);
+      const inWeek = (d: Date | null) => Boolean(d && d >= weekStart && d < weekEnd);
 
-  return {
-    completedCount: rows.filter((r) => r.status === "completed" && inWeek(r.completedAt)).length,
-    missedCount: rows.filter((r) => r.status !== "completed" && r.status !== "cancelled" && inWeek(r.deadline) && r.deadline! < new Date()).length,
-    addedCount: rows.filter((r) => inWeek(r.createdAt)).length,
-    droppedCount: rows.filter((r) => r.status === "cancelled" && inWeek(r.updatedAt)).length,
-  };
+      return {
+        completedCount: rows.filter((r) => r.status === "completed" && inWeek(r.completedAt)).length,
+        missedCount: rows.filter((r) => r.status !== "completed" && r.status !== "cancelled" && inWeek(r.deadline) && r.deadline! < new Date()).length,
+        addedCount: rows.filter((r) => inWeek(r.createdAt)).length,
+        droppedCount: rows.filter((r) => r.status === "cancelled" && inWeek(r.updatedAt)).length,
+      };
+    },
+    { completedCount: 0, missedCount: 0, addedCount: 0, droppedCount: 0 }
+  );
 }
 
 export async function getWeeklyReviewForWeek(userId: string, weekStart: Date) {
-  return db.query.weeklyReviews.findFirst({
-    where: and(eq(weeklyReviews.userId, userId), eq(weeklyReviews.weekStart, weekStart)),
-  });
+  return safeQuery(
+    () =>
+      db.query.weeklyReviews.findFirst({
+        where: and(eq(weeklyReviews.userId, userId), eq(weeklyReviews.weekStart, weekStart)),
+      }),
+    undefined
+  );
 }
 
 export async function getWeeklyReviewsForUser(userId: string) {
-  return db.query.weeklyReviews.findMany({
-    where: eq(weeklyReviews.userId, userId),
-    orderBy: (w, { desc }) => [desc(w.weekStart)],
-  });
+  return safeQuery(
+    () =>
+      db.query.weeklyReviews.findMany({
+        where: eq(weeklyReviews.userId, userId),
+        orderBy: (w, { desc }) => [desc(w.weekStart)],
+      }),
+    []
+  );
 }

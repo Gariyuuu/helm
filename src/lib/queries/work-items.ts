@@ -1,6 +1,6 @@
 import "server-only";
 import { and, eq, inArray, ne, notInArray } from "drizzle-orm";
-import { db } from "@/lib/db/client";
+import { db, safeQuery } from "@/lib/db/client";
 import { dependencies, workItems } from "@/lib/db/schema";
 import { scoreWorkItems, type ScoredWorkItem } from "@/lib/priority/from-db";
 
@@ -21,54 +21,66 @@ async function dependentCountsFor(userId: string, workItemIds: string[]): Promis
 }
 
 export async function getActiveWorkItems(userId: string): Promise<ScoredWorkItem[]> {
-  const rows = await db
-    .select()
-    .from(workItems)
-    .where(and(eq(workItems.userId, userId), notInArray(workItems.status, [...CLOSED_STATUSES])));
+  return safeQuery(async () => {
+    const rows = await db
+      .select()
+      .from(workItems)
+      .where(and(eq(workItems.userId, userId), notInArray(workItems.status, [...CLOSED_STATUSES])));
 
-  const counts = await dependentCountsFor(userId, rows.map((r) => r.id));
-  return scoreWorkItems(rows, counts);
+    const counts = await dependentCountsFor(userId, rows.map((r) => r.id));
+    return scoreWorkItems(rows, counts);
+  }, []);
 }
 
 export async function getAllWorkItems(userId: string): Promise<ScoredWorkItem[]> {
-  const rows = await db.select().from(workItems).where(eq(workItems.userId, userId));
-  const counts = await dependentCountsFor(userId, rows.map((r) => r.id));
-  return scoreWorkItems(rows, counts);
+  return safeQuery(async () => {
+    const rows = await db.select().from(workItems).where(eq(workItems.userId, userId));
+    const counts = await dependentCountsFor(userId, rows.map((r) => r.id));
+    return scoreWorkItems(rows, counts);
+  }, []);
 }
 
 export async function getWorkItemsByProject(userId: string, projectId: string): Promise<ScoredWorkItem[]> {
-  const rows = await db
-    .select()
-    .from(workItems)
-    .where(and(eq(workItems.userId, userId), eq(workItems.projectId, projectId), ne(workItems.status, "archived")));
-  const counts = await dependentCountsFor(userId, rows.map((r) => r.id));
-  return scoreWorkItems(rows, counts);
+  return safeQuery(async () => {
+    const rows = await db
+      .select()
+      .from(workItems)
+      .where(and(eq(workItems.userId, userId), eq(workItems.projectId, projectId), ne(workItems.status, "archived")));
+    const counts = await dependentCountsFor(userId, rows.map((r) => r.id));
+    return scoreWorkItems(rows, counts);
+  }, []);
 }
 
 export async function getWorkItemsByDomain(userId: string, domainId: string): Promise<ScoredWorkItem[]> {
-  const rows = await db
-    .select()
-    .from(workItems)
-    .where(and(eq(workItems.userId, userId), eq(workItems.domainId, domainId), ne(workItems.status, "archived")));
-  const counts = await dependentCountsFor(userId, rows.map((r) => r.id));
-  return scoreWorkItems(rows, counts);
+  return safeQuery(async () => {
+    const rows = await db
+      .select()
+      .from(workItems)
+      .where(and(eq(workItems.userId, userId), eq(workItems.domainId, domainId), ne(workItems.status, "archived")));
+    const counts = await dependentCountsFor(userId, rows.map((r) => r.id));
+    return scoreWorkItems(rows, counts);
+  }, []);
 }
 
 export async function getArchivedWorkItems(userId: string): Promise<ScoredWorkItem[]> {
-  const rows = await db.select().from(workItems).where(and(eq(workItems.userId, userId), eq(workItems.status, "archived")));
-  const counts = await dependentCountsFor(userId, rows.map((r) => r.id));
-  return scoreWorkItems(rows, counts);
+  return safeQuery(async () => {
+    const rows = await db.select().from(workItems).where(and(eq(workItems.userId, userId), eq(workItems.status, "archived")));
+    const counts = await dependentCountsFor(userId, rows.map((r) => r.id));
+    return scoreWorkItems(rows, counts);
+  }, []);
 }
 
 export async function getWorkItemById(userId: string, id: string) {
-  return db.query.workItems.findFirst({ where: and(eq(workItems.userId, userId), eq(workItems.id, id)) });
+  return safeQuery(() => db.query.workItems.findFirst({ where: and(eq(workItems.userId, userId), eq(workItems.id, id)) }), undefined);
 }
 
 export async function getInboxItems(userId: string): Promise<ScoredWorkItem[]> {
-  const rows = await db
-    .select()
-    .from(workItems)
-    .where(and(eq(workItems.userId, userId), eq(workItems.status, "inbox")));
-  const counts = await dependentCountsFor(userId, rows.map((r) => r.id));
-  return scoreWorkItems(rows, counts);
+  return safeQuery(async () => {
+    const rows = await db
+      .select()
+      .from(workItems)
+      .where(and(eq(workItems.userId, userId), eq(workItems.status, "inbox")));
+    const counts = await dependentCountsFor(userId, rows.map((r) => r.id));
+    return scoreWorkItems(rows, counts);
+  }, []);
 }
