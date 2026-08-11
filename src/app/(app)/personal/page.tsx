@@ -1,12 +1,14 @@
 import { Heart } from "lucide-react";
-import { ComingSoon } from "@/components/layout/coming-soon";
+import { DomainWorkView } from "@/components/domain/domain-work-view";
 
 export default function PersonalPage() {
   return (
-    <ComingSoon
-      icon={Heart}
+    <DomainWorkView
+      slug="personal"
       title="Personal"
-      description="Errands, personal admin, and everything that keeps life running outside of work."
+      description="Everything that's just for you."
+      icon={Heart}
+      emptyLabel="Nothing here yet. Add something personal you want to track."
     />
   );
 }

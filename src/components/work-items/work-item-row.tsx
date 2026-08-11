@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Clock, FolderKanban, MoreHorizontal } from "lucide-react";
 import { PriorityBadge } from "./priority-badge";
 import type { ScoredWorkItem } from "@/lib/priority/from-db";
-import { completeWorkItem, postponeWorkItem } from "@/lib/actions/work-items";
+import { archiveWorkItem, completeWorkItem, postponeWorkItem } from "@/lib/actions/work-items";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 function formatDeadline(d: Date | null) {
@@ -75,6 +75,16 @@ export function WorkItemRow({ scored, projectName }: { scored: ScoredWorkItem; p
             }
           >
             Snooze / postpone
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() =>
+              startTransition(async () => {
+                await archiveWorkItem(item.id);
+                router.refresh();
+              })
+            }
+          >
+            Archive
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

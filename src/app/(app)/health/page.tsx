@@ -1,12 +1,14 @@
 import { HeartPulse } from "lucide-react";
-import { ComingSoon } from "@/components/layout/coming-soon";
+import { DomainWorkView } from "@/components/domain/domain-work-view";
 
 export default function HealthPage() {
   return (
-    <ComingSoon
-      icon={HeartPulse}
+    <DomainWorkView
+      slug="health"
       title="Health"
-      description="Gym, sports, and recurring fitness activities — tracked for consistency, not guilt."
+      description="Workouts, appointments, and anything body/mind related."
+      icon={HeartPulse}
+      emptyLabel="Nothing here yet. Add a workout, appointment, or habit to track."
     />
   );
 }

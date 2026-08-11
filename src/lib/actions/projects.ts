@@ -12,6 +12,7 @@ import { logActivity } from "./activity";
 function touch() {
   revalidatePath("/projects");
   revalidatePath("/command-center");
+  revalidatePath("/archive");
 }
 
 export async function createProject(raw: unknown) {
@@ -58,6 +59,22 @@ export async function archiveProject(rawId: unknown) {
 
   if (!updated) throw new Error("Not found");
   await logActivity({ userId: user.id, entityType: "project", entityId: id, action: "archived" });
+  touch();
+  return updated;
+}
+
+export async function restoreProject(rawId: unknown) {
+  const user = await requireUser();
+  const id = idSchema.parse(rawId);
+
+  const [updated] = await db
+    .update(projects)
+    .set({ status: "active", archivedAt: null, updatedAt: new Date() })
+    .where(and(eq(projects.id, id), eq(projects.userId, user.id)))
+    .returning();
+
+  if (!updated) throw new Error("Not found");
+  await logActivity({ userId: user.id, entityType: "project", entityId: id, action: "restored" });
   touch();
   return updated;
 }

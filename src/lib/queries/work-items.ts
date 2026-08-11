@@ -45,6 +45,21 @@ export async function getWorkItemsByProject(userId: string, projectId: string): 
   return scoreWorkItems(rows, counts);
 }
 
+export async function getWorkItemsByDomain(userId: string, domainId: string): Promise<ScoredWorkItem[]> {
+  const rows = await db
+    .select()
+    .from(workItems)
+    .where(and(eq(workItems.userId, userId), eq(workItems.domainId, domainId), ne(workItems.status, "archived")));
+  const counts = await dependentCountsFor(userId, rows.map((r) => r.id));
+  return scoreWorkItems(rows, counts);
+}
+
+export async function getArchivedWorkItems(userId: string): Promise<ScoredWorkItem[]> {
+  const rows = await db.select().from(workItems).where(and(eq(workItems.userId, userId), eq(workItems.status, "archived")));
+  const counts = await dependentCountsFor(userId, rows.map((r) => r.id));
+  return scoreWorkItems(rows, counts);
+}
+
 export async function getWorkItemById(userId: string, id: string) {
   return db.query.workItems.findFirst({ where: and(eq(workItems.userId, userId), eq(workItems.id, id)) });
 }

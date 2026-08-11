@@ -20,6 +20,7 @@ function touch() {
   revalidatePath("/inbox");
   revalidatePath("/work");
   revalidatePath("/projects");
+  revalidatePath("/archive");
 }
 
 export async function createWorkItem(raw: unknown) {

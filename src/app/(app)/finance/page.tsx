@@ -1,12 +1,14 @@
 import { Landmark } from "lucide-react";
-import { ComingSoon } from "@/components/layout/coming-soon";
+import { DomainWorkView } from "@/components/domain/domain-work-view";
 
 export default function FinancePage() {
   return (
-    <ComingSoon
-      icon={Landmark}
+    <DomainWorkView
+      slug="finance"
       title="Finance"
-      description="Payments, subscriptions, and financial admin tasks — organizational only, never a brokerage."
+      description="Bills, budgeting tasks, and money-related follow-ups."
+      icon={Landmark}
+      emptyLabel="Nothing here yet. Add a bill or financial task to track."
     />
   );
 }

@@ -6,6 +6,7 @@ import { getDomainsForUser } from "@/lib/queries/domains";
 import { WorkItemRow } from "@/components/work-items/work-item-row";
 import { WorkItemFormDialog } from "@/components/work-items/work-item-form-dialog";
 import { ProjectFormDialog } from "@/components/projects/project-form-dialog";
+import { ArchiveProjectButton } from "@/components/projects/archive-project-button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -47,23 +48,26 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
           </div>
           {project.objective && <p className="text-sm text-muted-foreground">{project.objective}</p>}
         </div>
-        <ProjectFormDialog
-          trigger={
-            <Button variant="outline" size="sm" className="gap-1.5 shrink-0">
-              <Pencil className="size-3.5" /> Edit
-            </Button>
-          }
-          domains={domainOptions}
-          projectId={project.id}
-          initial={{
-            name: project.name,
-            objective: project.objective ?? "",
-            domainId: project.domainId,
-            status: project.status,
-            deadline: project.deadline ? project.deadline.toISOString().slice(0, 10) : "",
-            nextActionText: project.nextActionText ?? "",
-          }}
-        />
+        <div className="flex shrink-0 gap-1.5">
+          <ProjectFormDialog
+            trigger={
+              <Button variant="outline" size="sm" className="gap-1.5">
+                <Pencil className="size-3.5" /> Edit
+              </Button>
+            }
+            domains={domainOptions}
+            projectId={project.id}
+            initial={{
+              name: project.name,
+              objective: project.objective ?? "",
+              domainId: project.domainId,
+              status: project.status,
+              deadline: project.deadline ? project.deadline.toISOString().slice(0, 10) : "",
+              nextActionText: project.nextActionText ?? "",
+            }}
+          />
+          <ArchiveProjectButton projectId={project.id} />
+        </div>
       </div>
 
       <Card className="p-4">

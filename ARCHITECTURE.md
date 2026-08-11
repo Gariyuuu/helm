@@ -16,25 +16,47 @@ src/
       inbox/                quick capture + triage
       work/                 All Work — filterable list of every work item
       projects/[id]/        project detail with computed health
-      school/ career/ … 	  stubbed nav destinations (ComingSoon placeholder)
+      school/ career/ applications/ research/ goals/ waiting-on/
+      learning/ travel/ personal/ health/ finance/ relationships/
+      archive/ weekly-review/ insights/ calendar/
+                            every nav destination — full queries/actions/UI, no stubs
     sign-in/ sign-up/       Clerk auth routes
   components/
     ui/                    shadcn primitives
     layout/                sidebar, topbar, mobile nav, command palette
     work-items/            WorkItemRow, PriorityBadge, WorkItemFormDialog
-    projects/              ProjectFormDialog
+    projects/              ProjectFormDialog, ArchiveProjectButton
     command-center/        NextMoveCard
+    goals/ research/ school/ career/ applications/ waiting-on/
+    learning/ travel/ domain/ archive/ weekly-review/ calendar/
+                            per-vertical form dialogs + row/card components;
+                            domain/domain-work-view.tsx is shared by 3 pages (see below)
   lib/
     db/                    schema.ts (~35 tables), client.ts, seed.ts
     priority/              engine.ts — the scoring model (pure, unit-tested)
     dashboard/             page-level view builders (kept out of components so
                             Date.now() isn't called during render — see below)
-    queries/                read paths (work items, projects, domains, settings)
+    queries/                read paths — one file per vertical (work-items, projects,
+                            domains, settings, goals, research, school, career,
+                            waiting-items, skills, travel, weekly-review, insights,
+                            calendar)
     actions/                'use server' mutations (Zod-validated, auth-checked)
     validation/             Zod schemas shared by actions and forms
     auth/                   getOrCreateUser() — syncs Clerk → local `users` row
     ai/provider.ts          swappable AI abstraction (no-op until Phase 7)
 ```
+
+## Domain-scoped pages reuse the universal work-item system
+
+Personal, Health, and Finance don't have their own tables — the spec models them as
+`life_domains` (seeded slugs: `personal`, `health`, `finance`, `relationships`, plus
+academics/career/research/projects/learning/travel), and a domain page is just
+`work_items` filtered by `domain_id`. One component,
+`src/components/domain/domain-work-view.tsx`, powers all three: it looks up the domain
+by slug, queries `getWorkItemsByDomain`, and renders the existing `WorkItemRow` /
+`WorkItemFormDialog` (pre-scoped via `initial={{ domainId }}`) — no new schema, no new
+form. Relationships uses the same domain-filtered list for follow-ups, plus the
+`contacts` table (shared with Career) for the people directory.
 
 ## The priority engine
 
@@ -88,11 +110,9 @@ call — not a workaround, just where time-dependent view logic belongs.
 goals/goal relationships, dependencies, life domains, categories, courses/assignments,
 applications, research projects, opportunities, waiting items, events, focus sessions,
 time logs, notes/links/attachments, activity logs, priority snapshots, weekly/daily
-reviews, settings, AI summaries. Only work items, projects, life domains, and settings
-have query/action/UI layers wired up in this build phase — the rest of the schema is
-provisioned and seeded so later phases (School, Career, Research, Calendar, Goals,
-Waiting On, Insights) can be built directly against real tables instead of designing
-schema and UI at the same time.
+reviews, settings, AI summaries. Every table has a query/action/UI layer now **except**
+notifications, daily_reviews, ai_summaries, notes/links/attachments (schema exists,
+no UI — see HANDOFF.md's "not built yet" list).
 
 `work_items` is the universal object (spec §4): every kind of actionable thing —
 assignment, exam, application, errand, date, trip, habit, reading, interview — is a row

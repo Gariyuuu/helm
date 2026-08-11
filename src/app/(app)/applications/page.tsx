@@ -1,12 +1,81 @@
-import { FileText } from "lucide-react";
-import { ComingSoon } from "@/components/layout/coming-soon";
+import { requireUser } from "@/lib/auth/current-user";
+import { getApplicationsForUser, getCompaniesForUser } from "@/lib/queries/career";
+import { ApplicationFormDialog } from "@/components/applications/application-form-dialog";
+import { ApplicationCard } from "@/components/applications/application-card";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
-export default function ApplicationsPage() {
+const ACTIVE_GROUPS: { label: string; statuses: string[] }[] = [
+  { label: "Interested / researching", statuses: ["interested", "researching"] },
+  { label: "Preparing / ready", statuses: ["preparing", "ready"] },
+  { label: "Applied", statuses: ["applied"] },
+  { label: "In process", statuses: ["oa", "interview", "final_round"] },
+  { label: "Offer", statuses: ["offer"] },
+];
+const CLOSED_STATUSES = ["rejected", "withdrawn"];
+
+export default async function ApplicationsPage() {
+  const user = await requireUser();
+  const [rows, companies] = await Promise.all([getApplicationsForUser(user.id), getCompaniesForUser(user.id)]);
+  const companyOptions = companies.map((c) => ({ id: c.id, name: c.name }));
+  const closed = rows.filter((r) => CLOSED_STATUSES.includes(r.application.status));
+
+  const total = rows.length;
+  const applied = rows.filter((r) => r.application.status !== "interested" && r.application.status !== "researching").length;
+  const responseRate = applied > 0 ? Math.round((rows.filter((r) => !["interested", "researching", "preparing", "ready", "applied"].includes(r.application.status)).length / applied) * 100) : 0;
+
   return (
-    <ComingSoon
-      icon={FileText}
-      title="Application Tracker"
-      description="Pipeline from Interested through Offer, with deadlines, response rates, and interview conversion."
-    />
+    <div className="mx-auto max-w-3xl space-y-4 p-4 md:p-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-semibold tracking-tight">Application Tracker</h1>
+          <p className="text-sm text-muted-foreground">
+            {total} total · {responseRate}% response rate
+          </p>
+        </div>
+        <ApplicationFormDialog
+          companies={companyOptions}
+          trigger={
+            <Button size="sm" className="gap-1.5">
+              <Plus className="size-4" /> New
+            </Button>
+          }
+        />
+      </div>
+
+      {total === 0 ? (
+        <Card className="border-dashed p-10 text-center text-sm text-muted-foreground">No applications yet.</Card>
+      ) : (
+        <div className="flex flex-col gap-5">
+          {ACTIVE_GROUPS.map((group) => {
+            const groupRows = rows.filter((r) => group.statuses.includes(r.application.status));
+            if (groupRows.length === 0) return null;
+            return (
+              <div key={group.label}>
+                <h2 className="mb-2 text-sm font-semibold text-muted-foreground">
+                  {group.label} ({groupRows.length})
+                </h2>
+                <div className="flex flex-col gap-2">
+                  {groupRows.map((r) => (
+                    <ApplicationCard key={r.application.id} application={r.application} company={r.company} />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+          {closed.length > 0 && (
+            <div>
+              <h2 className="mb-2 text-sm font-semibold text-muted-foreground">Closed ({closed.length})</h2>
+              <div className="flex flex-col gap-2 opacity-60">
+                {closed.map((r) => (
+                  <ApplicationCard key={r.application.id} application={r.application} company={r.company} />
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
   );
 }

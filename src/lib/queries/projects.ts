@@ -45,3 +45,10 @@ export async function getProjectsForUser(userId: string): Promise<ProjectWithHea
 export async function getProjectById(userId: string, id: string) {
   return db.query.projects.findFirst({ where: and(eq(projects.id, id), eq(projects.userId, userId)) });
 }
+
+export async function getArchivedProjectsForUser(userId: string) {
+  return db.query.projects.findMany({
+    where: and(eq(projects.userId, userId), eq(projects.status, "archived")),
+    orderBy: (p, { desc }) => [desc(p.archivedAt)],
+  });
+}
