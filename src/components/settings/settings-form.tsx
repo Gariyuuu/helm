@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -31,14 +32,20 @@ export function SettingsForm({
 }) {
   const [capacity, setCapacity] = useState(initialCapacity);
   const [notificationLevel, setNotificationLevel] = useState(initialNotificationLevel);
-  const [theme, setTheme] = useState(initialTheme);
   const [isPending, startTransition] = useTransition();
   const [saved, setSaved] = useState(false);
   const router = useRouter();
+  const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    if (theme === undefined) setTheme(initialTheme);
+    // Only seed from the saved DB value once, before next-themes has hydrated its own state.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function save() {
     startTransition(async () => {
-      await updateSettings({ capacityByDay: capacity, notificationLevel, theme });
+      await updateSettings({ capacityByDay: capacity, notificationLevel, theme: (theme as typeof initialTheme) ?? initialTheme });
       setSaved(true);
       router.refresh();
       setTimeout(() => setSaved(false), 2000);
@@ -86,7 +93,7 @@ export function SettingsForm({
 
       <Card className="p-4">
         <h3 className="mb-3 text-sm font-semibold">Theme</h3>
-        <Select value={theme} onValueChange={(v) => setTheme(v as typeof theme)}>
+        <Select value={theme ?? initialTheme} onValueChange={setTheme}>
           <SelectTrigger className="w-56">
             <SelectValue />
           </SelectTrigger>
