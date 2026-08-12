@@ -10,9 +10,9 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden md:flex w-60 shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground">
+    <aside className="hidden md:flex w-60 shrink-0 flex-col border-r border-sidebar-border bg-sidebar/85 backdrop-blur-xl text-sidebar-foreground">
       <div className="flex items-center gap-2 px-4 py-4">
-        <Anchor className="size-5" />
+        <Anchor className="size-5 text-primary" />
         <span className="font-semibold tracking-tight">Helm</span>
       </div>
       <nav className="flex-1 overflow-y-auto px-2 pb-4">
@@ -27,7 +27,7 @@ export function Sidebar() {
                   className={cn(
                     "flex items-center gap-2.5 rounded-md px-3 py-1.5 text-sm transition-colors",
                     active
-                      ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                      ? "bg-primary/10 text-primary font-medium"
                       : "text-sidebar-foreground/70 hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground",
                   )}
                 >

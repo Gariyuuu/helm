@@ -16,7 +16,7 @@ const MOBILE_ITEMS = [
 export function MobileNav() {
   const pathname = usePathname();
   return (
-    <nav className="md:hidden sticky bottom-0 z-40 flex items-stretch border-t border-border bg-background/95 backdrop-blur">
+    <nav className="md:hidden sticky bottom-0 z-40 flex items-stretch border-t border-border bg-background/85 backdrop-blur-xl">
       {MOBILE_ITEMS.map((item) => {
         const active = pathname === item.href || pathname.startsWith(item.href + "/");
         return (
@@ -25,7 +25,7 @@ export function MobileNav() {
             href={item.href}
             className={cn(
               "flex flex-1 flex-col items-center gap-0.5 py-2 text-[11px]",
-              active ? "text-foreground" : "text-muted-foreground",
+              active ? "text-primary" : "text-muted-foreground",
             )}
           >
             <item.icon className="size-5" />

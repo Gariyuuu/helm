@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AccentProvider } from "@/components/theme/accent-provider";
+import { BackgroundProvider } from "@/components/theme/background-provider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -33,8 +34,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <body className="min-h-full flex flex-col bg-background text-foreground">
           <ThemeProvider>
             <AccentProvider>
-              <TooltipProvider>{children}</TooltipProvider>
-              <Toaster />
+              <BackgroundProvider>
+                <TooltipProvider>{children}</TooltipProvider>
+                <Toaster />
+              </BackgroundProvider>
             </AccentProvider>
           </ThemeProvider>
         </body>

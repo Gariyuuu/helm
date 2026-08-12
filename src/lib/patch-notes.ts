@@ -7,6 +7,18 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: "0.6.0",
+    date: "2026-08-12",
+    title: "Accent, everywhere — plus custom backgrounds",
+    changes: [
+      "The active sidebar item and the Helm logo now use your accent color — previously only buttons and focus rings did, because the sidebar was wired to an unused token",
+      "A soft accent-tinted gradient now washes the page margins by default, so the whole app reads as themed, not just isolated controls",
+      "New Background section in Settings: four gradient presets that automatically match your accent color, or upload your own image",
+      "Uploaded images are resized and compressed client-side and kept on this device only — nothing is sent anywhere",
+      "Sidebar, topbar, and mobile nav are now translucent with a blur so the background shows through behind them; page content stays fully opaque and readable",
+    ],
+  },
+  {
     version: "0.5.0",
     date: "2026-08-11",
     title: "Accent themes and this page",

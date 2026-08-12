@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { ThemeWheel } from "@/components/theme/theme-wheel";
+import { BackgroundPicker } from "@/components/theme/background-picker";
 import { updateSettings } from "@/lib/actions/settings";
 import type { CapacityByDay } from "@/lib/priority/capacity";
 
@@ -110,6 +111,14 @@ export function SettingsForm({
 
         <h4 className="mb-3 text-sm font-semibold">Accent color</h4>
         <ThemeWheel />
+      </Card>
+
+      <Card className="p-4">
+        <h3 className="mb-1 text-sm font-semibold">Background</h3>
+        <p className="mb-3 text-xs text-muted-foreground">
+          Shown behind the sidebar, topbar, and page margins. Pick a preset or upload your own.
+        </p>
+        <BackgroundPicker />
       </Card>
 
       <Button onClick={save} disabled={isPending}>

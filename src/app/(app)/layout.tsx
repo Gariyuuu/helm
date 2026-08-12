@@ -4,13 +4,15 @@ import { Sidebar } from "@/components/layout/sidebar";
 import { Topbar } from "@/components/layout/topbar";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { CommandPalette } from "@/components/layout/command-palette";
+import { BackgroundLayer } from "@/components/theme/background-layer";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const user = await getOrCreateUser();
   if (!user) redirect("/sign-in");
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-background">
+    <div className="flex h-screen w-full overflow-hidden">
+      <BackgroundLayer />
       <Sidebar />
       <div className="flex flex-1 flex-col overflow-hidden">
         <Topbar />

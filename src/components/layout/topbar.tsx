@@ -11,7 +11,7 @@ export function Topbar() {
   );
 
   return (
-    <header className="flex h-14 shrink-0 items-center justify-between border-b border-border px-4 md:px-6">
+    <header className="flex h-14 shrink-0 items-center justify-between border-b border-border bg-background/70 backdrop-blur-xl px-4 md:px-6">
       <div className="text-sm text-muted-foreground">{today}</div>
       <div className="flex items-center gap-3">
         <Button
