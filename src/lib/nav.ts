@@ -21,6 +21,7 @@ import {
   BarChart3,
   ClipboardCheck,
   Archive,
+  ScrollText,
   Settings,
 } from "lucide-react";
 
@@ -74,6 +75,7 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     items: [
       { label: "Archive", href: "/archive", icon: Archive },
+      { label: "Patch Notes", href: "/patch-notes", icon: ScrollText },
       { label: "Settings", href: "/settings", icon: Settings },
     ],
   },

@@ -201,6 +201,94 @@
   --domain-personal: oklch(0.7 0.08 290);
 }
 
+/* Accent themes — override just the brand surfaces (buttons, focus rings, active
+   sidebar item), independent of light/dark mode. "default" uses the base tokens
+   above and needs no override block. */
+html[data-accent="ocean"] {
+  --primary: oklch(0.55 0.18 250);
+  --primary-foreground: oklch(0.98 0.01 250);
+  --ring: oklch(0.6 0.15 250);
+  --sidebar-primary: oklch(0.55 0.18 250);
+  --sidebar-primary-foreground: oklch(0.98 0.01 250);
+  --sidebar-ring: oklch(0.6 0.15 250);
+}
+html.dark[data-accent="ocean"] {
+  --primary: oklch(0.7 0.16 250);
+  --primary-foreground: oklch(0.15 0.02 250);
+  --ring: oklch(0.6 0.14 250);
+  --sidebar-primary: oklch(0.7 0.16 250);
+  --sidebar-primary-foreground: oklch(0.15 0.02 250);
+  --sidebar-ring: oklch(0.6 0.14 250);
+}
+
+html[data-accent="forest"] {
+  --primary: oklch(0.5 0.14 155);
+  --primary-foreground: oklch(0.98 0.01 155);
+  --ring: oklch(0.6 0.12 155);
+  --sidebar-primary: oklch(0.5 0.14 155);
+  --sidebar-primary-foreground: oklch(0.98 0.01 155);
+  --sidebar-ring: oklch(0.6 0.12 155);
+}
+html.dark[data-accent="forest"] {
+  --primary: oklch(0.68 0.15 155);
+  --primary-foreground: oklch(0.15 0.02 155);
+  --ring: oklch(0.55 0.12 155);
+  --sidebar-primary: oklch(0.68 0.15 155);
+  --sidebar-primary-foreground: oklch(0.15 0.02 155);
+  --sidebar-ring: oklch(0.55 0.12 155);
+}
+
+html[data-accent="sunset"] {
+  --primary: oklch(0.65 0.19 45);
+  --primary-foreground: oklch(0.15 0.02 45);
+  --ring: oklch(0.7 0.15 45);
+  --sidebar-primary: oklch(0.65 0.19 45);
+  --sidebar-primary-foreground: oklch(0.15 0.02 45);
+  --sidebar-ring: oklch(0.7 0.15 45);
+}
+html.dark[data-accent="sunset"] {
+  --primary: oklch(0.75 0.17 45);
+  --primary-foreground: oklch(0.15 0.02 45);
+  --ring: oklch(0.65 0.14 45);
+  --sidebar-primary: oklch(0.75 0.17 45);
+  --sidebar-primary-foreground: oklch(0.15 0.02 45);
+  --sidebar-ring: oklch(0.65 0.14 45);
+}
+
+html[data-accent="berry"] {
+  --primary: oklch(0.55 0.22 340);
+  --primary-foreground: oklch(0.98 0.02 340);
+  --ring: oklch(0.65 0.18 340);
+  --sidebar-primary: oklch(0.55 0.22 340);
+  --sidebar-primary-foreground: oklch(0.98 0.02 340);
+  --sidebar-ring: oklch(0.65 0.18 340);
+}
+html.dark[data-accent="berry"] {
+  --primary: oklch(0.72 0.18 340);
+  --primary-foreground: oklch(0.15 0.02 340);
+  --ring: oklch(0.6 0.16 340);
+  --sidebar-primary: oklch(0.72 0.18 340);
+  --sidebar-primary-foreground: oklch(0.15 0.02 340);
+  --sidebar-ring: oklch(0.6 0.16 340);
+}
+
+html[data-accent="violet"] {
+  --primary: oklch(0.5 0.2 290);
+  --primary-foreground: oklch(0.98 0.01 290);
+  --ring: oklch(0.6 0.16 290);
+  --sidebar-primary: oklch(0.5 0.2 290);
+  --sidebar-primary-foreground: oklch(0.98 0.01 290);
+  --sidebar-ring: oklch(0.6 0.16 290);
+}
+html.dark[data-accent="violet"] {
+  --primary: oklch(0.7 0.17 290);
+  --primary-foreground: oklch(0.15 0.02 290);
+  --ring: oklch(0.6 0.15 290);
+  --sidebar-primary: oklch(0.7 0.17 290);
+  --sidebar-primary-foreground: oklch(0.15 0.02 290);
+  --sidebar-ring: oklch(0.6 0.15 290);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

@@ -8,6 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { ThemeWheel } from "@/components/theme/theme-wheel";
 import { updateSettings } from "@/lib/actions/settings";
 import type { CapacityByDay } from "@/lib/priority/capacity";
 
@@ -103,6 +105,11 @@ export function SettingsForm({
             <SelectItem value="system">System</SelectItem>
           </SelectContent>
         </Select>
+
+        <Separator className="my-4" />
+
+        <h4 className="mb-3 text-sm font-semibold">Accent color</h4>
+        <ThemeWheel />
       </Card>
 
       <Button onClick={save} disabled={isPending}>
