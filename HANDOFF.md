@@ -1,12 +1,22 @@
 # Handoff
 
+> **Correction added 2026-08-17 by a documentation-audit pass** (content
+> below this note is unchanged from the 2026-08-11 session that wrote it):
+> the "Not deployed to Vercel yet" line below is **outdated**. A Vercel
+> project is linked (`.vercel/project.json`) and
+> `https://helm-lovat-theta.vercel.app` is live and content-verified. See
+> `PROJECT_STATE.md` and `DEPLOYMENT.md` for the full correction, and
+> `TASKS.md` for **current task T-001** (blocked: needs user confirmation
+> on deploy/seed status and the undocumented `habits`-table gap).
+
 Status as of this session: **every nav destination is a real page.** Phase 1
 (Foundation), Phase 2 (Core Work System), Phase 5 (Calendar + Focus Mode + time logs),
 and Phase 6 (School/Career/Applications/Research/Goals/Waiting On + the remaining
 domain verticals) are done, plus a working slice of Phase 3 (Priority Engine) and
 Phase 4 (Command Center) — see the master spec's §83 build order. Pushed to
 `github.com/Gariyuuu/helm`. Neon + Clerk are provisioned (`.env.local` has real
-credentials, pulled via Vercel). Not deployed to Vercel yet.
+credentials, pulled via Vercel). Not deployed to Vercel yet **[Outdated — see the
+correction note above]**.
 
 ## What's real and working
 
@@ -121,3 +131,32 @@ above — daily review flow and notifications are probably the highest-value nex
 (both have schema + no UI, same shape as this session's work). After that: NLP quick
 capture for Inbox, or wiring `goal_relationships` so Goals actually rolls up linked
 project/task progress instead of tracking it manually.
+
+---
+
+## Prompt for the next Claude Code account
+
+```
+This is ~/Projects/helm — Gary Wang's Personal Command Center / Life OS
+(Next.js 16 + React 19 + TypeScript + Tailwind 4 + shadcn + Clerk + Neon +
+Drizzle). Public GitHub repo (github.com/Gariyuuu/helm) but stores real
+personal data (school/career/health/finance) — see SECURITY_REVIEW.md.
+
+Before doing anything else:
+1. Read this file (HANDOFF.md) fully, including the 2026-08-17 correction
+   note at the top.
+2. Read PROJECT_STATE.md, then CLAUDE.md, then TASKS.md (current task
+   T-001 — needs your confirmation on 2 open questions, see TASKS.md).
+3. Run `git status` and `git log --oneline -10` and reconcile against
+   PROJECT_STATE.md — don't assume the docs are perfectly in sync.
+4. Verify https://helm-lovat-theta.vercel.app still returns the real app
+   (title "Helm — Personal Command Center"), not just a 200 — vanity
+   .vercel.app domains have collided with unrelated third-party sites
+   elsewhere in this workspace before.
+5. Every server action must call requireUser() and scope by userId — see
+   CLAUDE.md's critical rules before adding or editing one.
+
+Before you end your session: update PROJECT_STATE.md, TASKS.md, and
+append a dated entry to SESSION_LOG.md. These docs are the only memory
+that carries forward to the next account/session.
+```
